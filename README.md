@@ -1,6 +1,6 @@
 # get_x
 
-A new Flutter project.
+in this  project: Using Get API, a list of product details displayed on app screen using GetX state management for maintain MVC standard.
 
 ## Getting Started
 
