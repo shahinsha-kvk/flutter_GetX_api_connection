@@ -12,13 +12,24 @@ class HomePage extends StatelessWidget {
    @override
    Widget build(BuildContext context) {
      return Scaffold(
-       appBar: AppBar(
-           title: Text("get X Api")
-       ),
-       body: Container(
-         height: double.infinity,
-         width: double.infinity,
-         child: Obx((){
+         appBar: AppBar(
+           title: Text("GetX API"),
+           actions: [
+             IconButton(
+               icon: Icon(Icons.refresh),
+               onPressed: () {
+                 vcvcvcv.getdata(); // Assuming fetchData is a method to reload data
+               },
+             ),
+           ],
+         ),
+       // appBar: AppBar(
+       //     title: Text("get X Api")
+       // ),
+       // body: Container(
+       //   height: double.infinity,
+       //   width: double.infinity,
+         body: Obx((){
            return vcvcvcv.loading.isTrue? Center(child: CircularProgressIndicator())
            : ListView.builder(
            //     itemCount: vcvcvcv.ddddddddddddddddddddddd.length,
@@ -49,10 +60,16 @@ class HomePage extends StatelessWidget {
                        Text('ID: ${data.id}', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                        SizedBox(height: 8.0),
                        // Text('Title: ${data.title}', style: TextStyle(fontSize: 16))
-                       Text('Title: ${data.title ?? 'N/A'}', style: TextStyle(fontSize: 19)),
+                   Text('Title: ${data.title ?? 'N/A'}',
+                   style: TextStyle(
+                     fontSize: 19,
+                     fontWeight: FontWeight.w600,
+                   ),
+                 ),
                        SizedBox(height: 8.0),
                        // Text('Price: \$${data.price}', style: TextStyle(fontSize: 16)),
-                       Text('Price: \$${data.price ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+                       Text('Price: \$${data.price ?? 'N/A'}', style: TextStyle(fontSize: 16,color: Colors.green,
+                       )),
                        SizedBox(height: 8.0),
                        // Text('Description: ${data.description}', style: TextStyle(fontSize: 16)),
                        Text('Description: ${data.description ?? 'N/A'}', style: TextStyle(fontSize: 16)),
@@ -61,15 +78,49 @@ class HomePage extends StatelessWidget {
                        Text('Category: ${data.category ?? 'N/A'}', style: TextStyle(fontSize: 16)),
 
                        SizedBox(height: 8.0),
-
                        imageUrl.isNotEmpty
-                           ? SizedBox(
-                         height: 400, // Specify desired height
-                         width: 200, // Specify desired width
-                         child: Image.network(imageUrl, fit: BoxFit.cover),
+                           ? ClipRRect(
+                         borderRadius: BorderRadius.circular(8.0),
+                         child: Image.network(
+                           imageUrl,
+                           height: 300,
+                           width: double.infinity,
+                           fit: BoxFit.cover,
+                           loadingBuilder: (context, child, loadingProgress) {
+                             if (loadingProgress == null) return child;
+                             return Center(
+                               child: CircularProgressIndicator(
+                                 value: loadingProgress.expectedTotalBytes != null
+                                     ? loadingProgress.cumulativeBytesLoaded /
+                                     loadingProgress.expectedTotalBytes!
+                                     : null,
+                               ),
+                             );
+                           },
+                           errorBuilder: (context, error, stackTrace) {
+                             return Center(
+                               child: Icon(
+                                 Icons.broken_image,
+                                 size: 50,
+                                 color: Colors.grey,
+                               ),
+                             );
+                           },
+                         ),
                        )
                            : Container(),
-                       SizedBox(height: 8.0),
+
+
+                       // SizedBox(height: 8.0),
+                       //
+                       // imageUrl.isNotEmpty
+                       //     ? SizedBox(
+                       //   height: 400, // Specify desired height
+                       //   width: 200, // Specify desired width
+                       //   child: Image.network(imageUrl, fit: BoxFit.cover),
+                       // )
+                       //     : Container(),
+                       // SizedBox(height: 8.0),
 
                        // Text('Rating: ${data.rating.rate} (${data.rating.count} reviews)', style: TextStyle(fontSize: 16)),
                        Text('Rating: $rate ($count reviews)', style: TextStyle(fontSize: 16)),
@@ -82,11 +133,10 @@ class HomePage extends StatelessWidget {
            );
          }
          ),
-       ),
+       );
 
 
 
 
-     );
    }
  }
